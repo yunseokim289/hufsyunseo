@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김윤서 - 멘토링 관리자 페이지</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2a5298;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .requests-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .request-item {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .request-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .request-info h3 {
+            color: #2a5298;
+            margin-bottom: 0.5rem;
+        }
+        
+        .request-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .request-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .status-new {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .request-content {
+            margin-bottom: 1rem;
+        }
+        
+        .request-content h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .request-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary-small {
+            background: #2a5298;
+            color: white;
+        }
+        
+        .btn-success-small {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-warning-small {
+            background: #ffc107;
+            color: #333;
+        }
+        
+        .btn-danger-small {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .no-requests {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .no-requests h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <a href="index.html" class="back-link">← 메인 페이지로 돌아가기</a>
+        
+        <div class="admin-header">
+            <h1>🎓 멘토링 관리자 페이지</h1>
+            <p>김윤서님의 멘토링 신청 현황을 확인하고 관리하세요</p>
+        </div>
+        
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">전체 신청</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="newRequests">0</div>
+                <div class="stat-label">신규 신청</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="processingRequests">0</div>
+                <div class="stat-label">처리중</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completedRequests">0</div>
+                <div class="stat-label">완료</div>
+            </div>
+        </div>
+        
+        <div class="requests-container">
+            <h2>📋 멘토링 신청 목록</h2>
+            <div id="requestsList">
+                <!-- 신청 목록이 여기에 표시됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 페이지 로드 시 신청 목록 표시
+        document.addEventListener('DOMContentLoaded', function() {
+            displayRequests();
+            updateStats();
+        });
+
+        // 신청 목록 표시
+        function displayRequests() {
+            const requests = JSON.parse(localStorage.getItem('mentoringRequests') || '[]');
+            const requestsList = document.getElementById('requestsList');
+            
+            if (requests.length === 0) {
+                requestsList.innerHTML = `
+                    <div class="no-requests">
+                        <h3>📭 아직 멘토링 신청이 없습니다</h3>
+                        <p>새로운 멘토링 신청이 들어오면 여기에 표시됩니다.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 최신 신청부터 정렬
+            requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            requestsList.innerHTML = requests.map(request => `
+                <div class="request-item" data-id="${request.id}">
+                    <div class="request-header">
+                        <div class="request-info">
+                            <h3>${request.name} (${request.email})</h3>
+                            <div class="request-meta">
+                                신청일: ${new Date(request.timestamp).toLocaleString()} | 
+                                주제: ${request.subject}
+                            </div>
+                        </div>
+                        <span class="request-status status-${getStatusClass(request.status)}">${request.status}</span>
+                    </div>
+                    <div class="request-content">
+                        <h4>상담 내용:</h4>
+                        <p>${request.message}</p>
+                    </div>
+                    <div class="request-actions">
+                        <button class="btn-small btn-primary-small" onclick="updateStatus(${request.id}, '처리중')">
+                            처리중으로 변경
+                        </button>
+                        <button class="btn-small btn-success-small" onclick="updateStatus(${request.id}, '완료')">
+                            완료로 변경
+                        </button>
+                        <button class="btn-small btn-warning-small" onclick="updateStatus(${request.id}, '신청완료')">
+                            신청완료로 변경
+                        </button>
+                        <button class="btn-small btn-danger-small" onclick="deleteRequest(${request.id})">
+                            삭제
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 상태별 CSS 클래스 반환
+        function getStatusClass(status) {
+            switch(status) {
+                case '신청완료': return 'new';
+                case '처리중': return 'processing';
+                case '완료': return 'completed';
+                default: return 'new';
+            }
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const requests = JSON.parse(localStorage.getItem('mentoringRequests') || '[]');
+            
+            const total = requests.length;
+            const newCount = requests.filter(r => r.status === '신청완료').length;
+            const processingCount = requests.filter(r => r.status === '처리중').length;
+            const completedCount = requests.filter(r => r.status === '완료').length;
+            
+            document.getElementById('totalRequests').textContent = total;
+            document.getElementById('newRequests').textContent = newCount;
+            document.getElementById('processingRequests').textContent = processingCount;
+            document.getElementById('completedRequests').textContent = completedCount;
+        }
+
+        // 상태 업데이트
+        function updateStatus(id, newStatus) {
+            let requests = JSON.parse(localStorage.getItem('mentoringRequests') || '[]');
+            const requestIndex = requests.findIndex(req => req.id === id);
+            
+            if (requestIndex !== -1) {
+                requests[requestIndex].status = newStatus;
+                localStorage.setItem('mentoringRequests', JSON.stringify(requests));
+                
+                // 화면 새로고침
+                displayRequests();
+                updateStats();
+                
+                alert(`상태가 "${newStatus}"로 변경되었습니다.`);
+            }
+        }
+
+        // 신청 삭제
+        function deleteRequest(id) {
+            if (confirm('정말로 이 신청을 삭제하시겠습니까?')) {
+                let requests = JSON.parse(localStorage.getItem('mentoringRequests') || '[]');
+                requests = requests.filter(req => req.id !== id);
+                localStorage.setItem('mentoringRequests', JSON.stringify(requests));
+                
+                // 화면 새로고침
+                displayRequests();
+                updateStats();
+                
+                alert('신청이 삭제되었습니다.');
+            }
+        }
+
+        // 전체 삭제 (관리자용)
+        function clearAllRequests() {
+            if (confirm('모든 멘토링 신청을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                localStorage.removeItem('mentoringRequests');
+                displayRequests();
+                updateStats();
+                alert('모든 신청이 삭제되었습니다.');
+            }
+        }
+
+        // 전역 함수로 노출
+        window.clearAllRequests = clearAllRequests;
+    </script>
+</body>
+</html> 
